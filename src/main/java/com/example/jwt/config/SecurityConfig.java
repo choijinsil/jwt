@@ -1,5 +1,6 @@
 package com.example.jwt.config;
 
+import com.example.jwt.jwt.JWTFilter;
 import com.example.jwt.jwt.JWTUtil;
 import com.example.jwt.jwt.LoginFilter;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -58,6 +59,9 @@ public class SecurityConfig {
                 .requestMatchers(PathRequest.toH2Console()).permitAll()
                 .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated());
+
+        http
+            .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
         http
             .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil), UsernamePasswordAuthenticationFilter.class);
